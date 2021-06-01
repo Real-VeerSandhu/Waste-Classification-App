@@ -6,26 +6,30 @@ from tensorflow import keras
 labels = {0: 'cardboard', 1: 'glass', 2: 'metal', 3: 'paper', 4: 'plastic', 5: 'trash'}
 resnet50 = keras.models.load_model('models/resnet50_gar_TESTINGPU.h5')
 
-def pred_img(model, x):
-    img1 = Image.open(x).convert(mode="RGB")
-    img1 = img1.resize((256,256))
-    array1 = np.array(img1.getdata())
-    img_np_array = np.reshape(array1, (256,256,3))
+def main():
 
-    a = np.expand_dims(img_np_array, axis=0)
-    print(model.predict(a), labels)
-    return labels[np.argmax(model.predict(a))]
+    def pred_img(model, x):
+        img1 = Image.open(x).convert(mode="RGB")
+        img1 = img1.resize((256,256))
+        array1 = np.array(img1.getdata())
+        img_np_array = np.reshape(array1, (256,256,3))
 
-a = st.file_uploader('File uploader', type=['png', 'jpg'])
+        a = np.expand_dims(img_np_array, axis=0)
+        print(model.predict(a), labels)
+        return labels[np.argmax(model.predict(a))]
 
-print(type(a))
+    a = st.file_uploader('File uploader', type=['png', 'jpg'])
 
-if (type(a) != type(None)):
-    image = Image.open(a)
-    st.image(image, caption='Uploaded Image.')
-    out = pred_img(resnet50, a)
-    st.write(a.name + ' -> ', out)
+    print(type(a))
 
+    if (type(a) != type(None)):
+        image = Image.open(a)
+        st.image(image, caption='Uploaded Image.')
+        out = pred_img(resnet50, a)
+        st.write(a.name + ' -> ', out)
+
+if __name__ == '__main__':
+    main()
 
 
 # from joblib import load
