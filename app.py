@@ -15,8 +15,8 @@ def main():
         img_np_array = np.reshape(array1, (256,256,3))
 
         a = np.expand_dims(img_np_array, axis=0)
-        print(model.predict(a), labels)
-        return labels[np.argmax(model.predict(a))]
+        outputs = [labels[np.argmax(model.predict(a))], model.predict(a)]
+        return outputs
 
     a = st.file_uploader('File uploader', type=['png', 'jpg'])
 
@@ -26,12 +26,10 @@ def main():
         image = Image.open(a)
         st.image(image, caption='Uploaded Image.')
         out = pred_img(resnet50, a)
-        st.write(a.name + ' -> ', out)
+        st.write(a.name + ' -> ', out[0], out[1])
 
 if __name__ == '__main__':
     main()
-
-
 # from joblib import load
 
 
